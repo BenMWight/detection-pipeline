@@ -1,0 +1,6 @@
+# Copy to terraform.tfvars and edit. terraform.tfvars is gitignored.
+# Workspace names are globally unique, so change this before you apply.
+
+workspace_name = "law-detection-pipeline-CHANGEME"
+location       = "australiaeast"
+daily_quota_gb = 1

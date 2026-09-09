@@ -1,0 +1,63 @@
+name: detections
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  validate:
+    name: Validate, convert and test detections
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      # Step 1 - VALIDATE (Phase 3)
+      # Sigma syntax is well formed and every REQUIRED field from
+      # detections/TEMPLATE.yml is present. Fail on a missing field.
+      - name: Validate rules
+        run: echo "TODO Phase 3 - python tools/validate.py detections/"
+
+      # Step 2 - CONVERT (Phase 3)
+      # Sigma to KQL. Fail the build on a conversion error.
+      - name: Convert to KQL
+        run: echo "TODO Phase 3 - python tools/convert.py detections/ --target kql"
+
+      # Step 3 - TEST (Phase 3) - this is the graded core of the project.
+      # Evaluate each converted rule against its test cases.
+      # Positive must match. Near-miss must not. Either failure fails the build.
+      - name: Test rules against cases
+        run: echo "TODO Phase 3 - python tools/test_rules.py"
+
+      # Step 4 - REPORT (Phase 3)
+      - name: Summary
+        if: always()
+        run: echo "TODO Phase 3 - rules validated / converted / passing"
+
+  terraform:
+    name: Terraform format and validate
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: hashicorp/setup-terraform@v3
+
+      - name: Format check
+        run: terraform -chdir=terraform fmt -check -recursive
+
+      - name: Init (no backend)
+        run: terraform -chdir=terraform init -backend=false
+
+      - name: Validate
+        run: terraform -chdir=terraform validate

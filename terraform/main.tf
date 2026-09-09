@@ -15,6 +15,18 @@ resource "azurerm_resource_group" "this" {
   tags     = var.tags
 }
 
-# TODO Phase 4: azurerm_log_analytics_workspace (wire up var.retention_days and var.daily_quota_gb)
-# TODO Phase 4: azurerm_sentinel_log_analytics_workspace_onboarding
 # TODO Phase 4: azurerm_sentinel_alert_rule_scheduled, one per detection
+
+resource "azurerm_log_analytics_workspace" "this" {
+  name                = var.workspace_name
+  location            = azurerm_resource_group.this.location
+  resource_group_name = azurerm_resource_group.this.name
+  sku                 = "PerGB2018"
+  retention_in_days   = var.retention_days
+  daily_quota_gb      = var.daily_quota_gb
+  tags                = var.tags
+}
+
+resource "azurerm_sentinel_log_analytics_workspace_onboarding" "this" {
+  workspace_id = azurerm_log_analytics_workspace.this.id
+}

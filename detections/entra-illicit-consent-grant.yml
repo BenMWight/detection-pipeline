@@ -1,0 +1,44 @@
+# Sigma rule template for this project.
+#
+# Every field below marked REQUIRED is checked by the CI validate step.
+# The three custom fields under `project:` are what Criterion 1 is graded on -
+# they are not standard Sigma, they exist so your reasoning is in the repo
+# rather than in your head.
+
+title: OAuth application granted mail read permissions
+id: b51e34a6-8a20-4d95-9323-77e63fbb14f9
+status: experimental
+description: |
+  Supposed to catch Oauth application grants
+author: Ben Wight
+date: 2026/09/09
+
+references:
+  - https://attack.mitre.org/techniques/TXXXX/
+
+tags:
+  - attack.Credential Access          # e.g. attack.credential_access
+  - attack.T1528          # technique id, lowercase
+
+logsource:
+  product: Azure       # windows, azure, etc
+  service: Auditlogs       # security, signinlogs, etc
+
+detection:
+  selection:
+    FieldName: value
+  condition: selection
+
+falsepositives:
+  - Admin setting up sentinel over the first few days.
+    "Backup service account performing bulk reads 0100-0300 daily" scores.
+
+level:  medium 
+
+# Project-specific metadata. Read by the Terraform deploy in Phase 4.
+project:
+  shape: atomic 
+  tuning_deferred: |
+   Review baseline activity.
+  query_frequency: PT1H                    # ISO 8601 duration
+  query_period: PT1H

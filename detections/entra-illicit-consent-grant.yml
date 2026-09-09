@@ -9,20 +9,20 @@ title: OAuth application granted mail read permissions
 id: b51e34a6-8a20-4d95-9323-77e63fbb14f9
 status: experimental
 description: |
-  Supposed to catch Oauth application grants
+  Goal is to catch unusual mail read Oauth application grants outside of the baseline.
 author: Ben Wight
 date: 2026/09/09
 
 references:
-  - https://attack.mitre.org/techniques/TXXXX/
+  - https://attack.mitre.org/techniques/T1528/
 
 tags:
-  - attack.Credential Access          # e.g. attack.credential_access
-  - attack.T1528          # technique id, lowercase
+  - attack.credential_access          # e.g. attack.credential_access
+  - attack.t1528          # technique id, lowercase
 
 logsource:
-  product: Azure       # windows, azure, etc
-  service: Auditlogs       # security, signinlogs, etc
+  product: azure       # windows, azure, etc
+  service: auditlogs       # security, signinlogs, etc
 
 detection:
   selection:
@@ -31,7 +31,8 @@ detection:
 
 falsepositives:
   - Admin setting up sentinel over the first few days.
-    "Backup service account performing bulk reads 0100-0300 daily" scores.
+  - mail read by apps that in the expected list.
+  - Azure service onboarding grants many permissions at once from a Microsoft IP; an attacker's grant is more likely to be an external ip , so an analyst should check source IP before escalating
 
 level:  medium 
 

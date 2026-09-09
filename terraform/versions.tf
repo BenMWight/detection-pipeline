@@ -24,7 +24,7 @@ terraform {
 
 provider "azurerm" {
   features {}
-
+  skip_provider_registration = true
   # Authentication comes from `az login` or ARM_* environment variables.
   # Do NOT put subscription_id, client_id, client_secret or tenant_id here.
 }

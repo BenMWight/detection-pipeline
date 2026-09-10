@@ -15,8 +15,6 @@ resource "azurerm_resource_group" "this" {
   tags     = var.tags
 }
 
-# TODO Phase 4: azurerm_sentinel_alert_rule_scheduled, one per detection
-
 resource "azurerm_log_analytics_workspace" "this" {
   name                = var.workspace_name
   location            = azurerm_resource_group.this.location
@@ -45,6 +43,47 @@ resource "azurerm_sentinel_alert_rule_scheduled" "illicit_consent" {
   query_frequency            = "PT1H"
   query_period               = "PT1H"
   tactics                    = ["CredentialAccess"]
+
+  depends_on = [azurerm_sentinel_log_analytics_workspace_onboarding.this]
+}
+
+resource "azurerm_sentinel_alert_rule_scheduled" "password_spray" {
+  name                       = "entra-password-spray"
+  log_analytics_workspace_id = azurerm_log_analytics_workspace.this.id
+  display_name               = "Entra password spraying"
+  severity                   = "Medium"
+  query                      = <<-QUERY
+    SigninLogs
+    | where ResultType == "50126"
+    | summarize
+        FailedAttempts = count(),
+        TargetedAccounts = dcount(UserPrincipalName),
+        Accounts = make_set(UserPrincipalName, 20)
+      by IPAddress, bin(TimeGenerated, 30m)
+    | where TargetedAccounts >= 10
+  QUERY
+  query_frequency            = "PT30M"
+  query_period               = "PT1H"
+  tactics                    = ["CredentialAccess"]
+
+  depends_on = [azurerm_sentinel_log_analytics_workspace_onboarding.this]
+}
+
+resource "azurerm_sentinel_alert_rule_scheduled" "role_assignment_afterhours" {
+  name                       = "role-assignment-outside-hours"
+  log_analytics_workspace_id = azurerm_log_analytics_workspace.this.id
+  display_name               = "Role assignment outside business hours"
+  severity                   = "Low"
+  query                      = <<-QUERY
+    AzureActivity
+    | where OperationNameValue =~ "MICROSOFT.AUTHORIZATION/ROLEASSIGNMENTS/WRITE"
+    | where ActivityStatusValue =~ "Success"
+    | extend LocalHour = datetime_part("Hour", datetime_add("Hour", 10, TimeGenerated))
+    | where LocalHour < 8 or LocalHour >= 18
+  QUERY
+  query_frequency            = "PT1H"
+  query_period               = "PT1H"
+  tactics                    = ["Persistence"]
 
   depends_on = [azurerm_sentinel_log_analytics_workspace_onboarding.this]
 }

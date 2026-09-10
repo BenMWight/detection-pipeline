@@ -13,7 +13,7 @@ description: |
   hours, on the assumption that privilege changes are made during working
   hours by identifiable staff.
 author: Ben Wight
-date: 2026/09/10
+date: 2026-09-10
 
 references:
   - https://attack.mitre.org/techniques/T1098/

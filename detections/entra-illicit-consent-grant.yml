@@ -50,13 +50,13 @@ falsepositives:
     automated pipeline. In the event captured during testing, the user agent
     showed AZURECLI, which indicates automation rather than the browser-based
     consent flow a phishing victim would follow.
-    
+
 level:  medium 
 
 # Project-specific metadata. Read by the Terraform deploy in Phase 4.
 project:
   shape: atomic 
-    tuning_deferred: |
+  tuning_deferred: |
     The detection matches strings against the whole serialised TargetResources
     blob rather than extracting the PublisherDomain field. Any event containing
     ".onmicrosoft.com" anywhere in that structure matches, including one where

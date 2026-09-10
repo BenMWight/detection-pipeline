@@ -1,0 +1,5 @@
+{
+  "OperationName": "Add application",
+  "Result": "success",
+  "TargetResources": "[{\"id\":\"a1b2c3d4-0000-0000-0000-000000000000\",\"displayName\":\"Contoso HR Portal\",\"type\":\"Application\",\"modifiedProperties\":[{\"displayName\":\"PublisherDomain\",\"oldValue\":\"[]\",\"newValue\":\"[\\\"contoso.com\\\"]\"}]}]"
+}

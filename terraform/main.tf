@@ -1,13 +1,15 @@
-# Phase 4 deliverable.
+# Sentinel workspace, onboarding, and three scheduled analytics rules.
 #
-# This file is intentionally near-empty. Building it out is the assessed work:
-#   - Log Analytics workspace with Sentinel enabled
-#   - your three detections as azurerm_sentinel_alert_rule_scheduled resources,
-#     with query, frequency, period, severity and ATT&CK tactics driven from the
-#     Sigma rule metadata rather than hardcoded here
+# The queries here are the Sigma rules plus the parts Sigma cannot express:
+# the spray rule's aggregation over distinct accounts, and the anomaly rule's
+# time-of-day filter. Field matching lives in detections/; platform-specific
+# logic lives here. The two must be kept in step by hand, which is a known
+# weakness of this split.
 #
-# Leave the ingestion cap on. An unbounded workspace is how this project
-# quietly eats your Azure credit.
+# The +10 hour offset in the anomaly rule hardcodes AEST and ignores daylight
+# saving. See tuning_deferred in the rule for why.
+#
+# Ingestion is capped at var.daily_quota_gb.
 
 resource "azurerm_resource_group" "this" {
   name     = var.resource_group_name

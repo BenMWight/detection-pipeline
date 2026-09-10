@@ -37,7 +37,7 @@ jobs:
       # Evaluate each converted rule against its test cases.
       # Positive must match. Near-miss must not. Either failure fails the build.
       - name: Test rules against cases
-        run: echo "TODO Phase 3 - python tools/test_rules.py"
+        run: python tools/test_rules.py
 
       # Step 4 - REPORT (Phase 3)
       - name: Summary

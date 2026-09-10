@@ -1,0 +1,43 @@
+# Sigma rule template for this project.
+#
+# Every field below marked REQUIRED is checked by the CI validate step.
+# The three custom fields under `project:` are what Criterion 1 is graded on -
+# they are not standard Sigma, they exist so your reasoning is in the repo
+# rather than in your head.
+
+title: Anomlous Azure Activity
+id: 7ff23ad4-b6dc-4cb1-8992-c9b4a7855fbf
+status: experimental
+description: |
+  Anomly based detection for azure activity logsoure
+author: Ben Wight
+date: 2026/09/10
+
+references:
+  - https://attack.mitre.org/techniques/T1098/
+
+tags:
+  - attack.persistence         # e.g. attack.credential_access
+  - attack.t1098          # technique id, lowercase
+
+logsource:
+  product: azure        # windows, azure, etc
+  service: activitylogs       # security, signinlogs, etc
+
+detection:
+  selection:
+    FieldName: value
+  condition: selection
+
+falsepositives:
+  - Activity during business hours
+
+level: low
+
+# Project-specific metadata. Read by the Terraform deploy in Phase 4.
+project:
+  shape:  anomaly    # REQUIRED - one rule of each
+  tuning_deferred: |
+    Hard to tune without a baseline, using activity outside of business hours as an anomly
+  query_frequency: PT1H                    # ISO 8601 duration
+  query_period: PT1H

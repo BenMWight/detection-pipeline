@@ -16,3 +16,14 @@ try to reconstruct it afterwards, it is assessed and it will not be accurate.
 Read the API key from an environment variable. A committed key is an automatic
 fail on the whole project, and it is graded against your full commit history,
 so a key removed in a later commit does not help you.
+
+
+## On `gen_tests.py`
+
+The model generates candidates. You verify and commit them. Log every
+acceptance and rejection to `docs/test-generation-log.md` as you go - do not
+try to reconstruct it afterwards, it is assessed and it will not be accurate.
+
+Read the API key from an environment variable. A committed key is an automatic
+fail on the whole project, and it is graded against your full commit history,
+so a key removed in a later commit does not help you.

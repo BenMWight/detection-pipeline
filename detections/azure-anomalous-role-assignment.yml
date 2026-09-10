@@ -30,7 +30,7 @@ detection:
   condition: selection
 
 falsepositives:
-  - Activity during business hours
+  - Activity not during business hours
 
 level: low
 

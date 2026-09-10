@@ -5,11 +5,19 @@
 # they are not standard Sigma, they exist so your reasoning is in the repo
 # rather than in your head.
 
-title: OAuth application granted mail read permissions
+title: Application registered with unverified publisher domain
 id: b51e34a6-8a20-4d95-9323-77e63fbb14f9
 status: experimental
 description: |
-  Goal is to catch unusual mail read Oauth application grants outside of the baseline.
+  Detects a new application registration where the publisher domain is the
+  tenant's default onmicrosoft.com domain, indicating no verified publisher.
+  Malicious OAuth applications used in illicit consent grant attacks are
+  typically unverified.
+
+  Limitation: this detects applications registered within our own tenant. In
+  the common attack pattern the application is registered in the attacker's
+  tenant and only the consent event appears in our logs, which this rule does
+  not cover. Detecting that requires the delegated permission grant event.
 author: Ben Wight
 date: 2026/09/09
 
@@ -26,8 +34,12 @@ logsource:
 
 detection:
   selection:
-    FieldName: value
-  condition: selection
+    OperationName: 'Add application'
+    Result: 'success'
+    TargetResources|contains: 'PublisherDomain'
+  filter_verified:
+    TargetResources|contains: '.onmicrosoft.com'
+  condition: selection and filter_verified
 
 falsepositives:
   - Admin setting up sentinel over the first few days.

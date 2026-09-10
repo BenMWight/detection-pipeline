@@ -5,11 +5,13 @@
 # they are not standard Sigma, they exist so your reasoning is in the repo
 # rather than in your head.
 
-title: Anomlous Azure Activity
+title: Role assignment outside business hours
 id: 7ff23ad4-b6dc-4cb1-8992-c9b4a7855fbf
 status: experimental
 description: |
-  Anomly based detection for azure activity logsoure
+  Detects Azure role assignment writes occurring outside defined business
+  hours, on the assumption that privilege changes are made during working
+  hours by identifiable staff.
 author: Ben Wight
 date: 2026/09/10
 
@@ -30,7 +32,15 @@ detection:
   condition: selection
 
 falsepositives:
-  - Activity not during business hours
+  - Scheduled automation. Deployment pipelines and infrastructure-as-code runs
+    executing overnight produce role assignments with no human present. In this
+    tenant, connecting the workspace to Defender generated four roleAssignments
+    writes within seconds, entirely legitimately.
+  - On-call engineering. An engineer responding to an incident at 2am assigns
+    themselves elevated access to fix something. This is the hard case, because
+    it is indistinguishable from an attacker escalating privilege, and the only
+    way to separate them is correlating against an incident record outside the
+    SIEM.
 
 level: low
 
@@ -38,6 +48,15 @@ level: low
 project:
   shape:  anomaly    # REQUIRED - one rule of each
   tuning_deferred: |
-    Hard to tune without a baseline, using activity outside of business hours as an anomly
+    "Business hours" is undefined and cannot be defined generically. It depends
+    on timezone, and a team split across Melbourne and Manila has no single
+    answer. In production I would derive the window per-identity from observed
+    activity rather than fixing one for the tenant.
+
+    The deeper limitation is the assumption itself. Time-of-day anomaly
+    detection assumes an attacker works outside our hours, but a competent one
+    works during them precisely to blend in. This rule catches the careless and
+    misses the careful, and it should be treated as one weak signal among
+    several rather than a standalone detection.
   query_frequency: PT1H                    # ISO 8601 duration
   query_period: PT1H

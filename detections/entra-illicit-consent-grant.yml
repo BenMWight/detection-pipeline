@@ -42,15 +42,29 @@ detection:
   condition: selection and filter_verified
 
 falsepositives:
-  - Developer deploys app
-  - Anything containing the literal text .onmicrosoft.com anywhere in TargetResource
-
+  - Internal application development. Every line-of-business app registered in
+    the tenant starts with the default onmicrosoft.com publisher domain, so in
+    any environment with active development this fires routinely. An analyst
+    should check whether the registering identity is a known developer or
+    service principal, and whether the registration came from the portal or an
+    automated pipeline. In the event captured during testing, the user agent
+    showed AZURECLI, which indicates automation rather than the browser-based
+    consent flow a phishing victim would follow.
+    
 level:  medium 
 
 # Project-specific metadata. Read by the Terraform deploy in Phase 4.
 project:
   shape: atomic 
-  tuning_deferred: |
-   Review baseline activity.
+    tuning_deferred: |
+    The detection matches strings against the whole serialised TargetResources
+    blob rather than extracting the PublisherDomain field. Any event containing
+    ".onmicrosoft.com" anywhere in that structure matches, including one where
+    the app's display name happens to contain it.
+
+    With more time the rule would parse modifiedProperties, locate the entry
+    where displayName is PublisherDomain, and match only its newValue. That is
+    expressible in KQL but not in portable Sigma, so it would move the rule from
+    vendor-neutral to Sentinel-specific.
   query_frequency: PT1H                    # ISO 8601 duration
   query_period: PT1H

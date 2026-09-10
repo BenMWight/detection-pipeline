@@ -37,7 +37,7 @@ detection:
     OperationName: 'Add application'
     Result: 'success'
     TargetResources|contains: 'PublisherDomain'
-  condition: selection and filter_verified
+  condition: selection
 
 falsepositives:
   - Developer deploys app

@@ -37,8 +37,6 @@ detection:
     OperationName: 'Add application'
     Result: 'success'
     TargetResources|contains: 'PublisherDomain'
-  filter_verified:
-    TargetResources|contains: '.onmicrosoft.com'
   condition: selection and filter_verified
 
 falsepositives:

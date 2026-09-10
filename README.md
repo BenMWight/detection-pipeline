@@ -4,7 +4,14 @@ A pipeline that keeps detection rules in version control, proves each one still
 fires on the behaviour it claims to catch, and deploys them to Microsoft
 Sentinel by code.
 
-> **Status: Phase 0 complete.** Scaffold only. Phases 1 to 6 are the work.
+## Pipeline verification
+
+Green build on main: <link>
+Caught regression: <link to the failed PR check>
+
+The failing build removed the publisher domain condition from the atomic rule.
+The positive test still matched, but the near-miss began matching too, so the
+rule no longer discriminated. The test step caught it and blocked the merge.
 
 ## Why
 
@@ -81,3 +88,31 @@ when you finish.
 
 **TODO Phase 6.** State them honestly. An acknowledged gap costs nothing. A gap
 you conceal that a reviewer finds costs a great deal.
+
+# Tools
+
+| Script | Phase | Purpose |
+|---|---|---|
+| `validate.py` | 3 | Sigma syntax plus the REQUIRED fields from TEMPLATE.yml |
+| `convert.py` | 3 | Sigma to KQL. Non-zero exit on conversion failure |
+| `test_rules.py` | 3 | Evaluate converted rules against `tests/`. The graded core |
+| `gen_tests.py` | 2 | Call the model with a rule, emit candidate event JSON |
+
+## On `gen_tests.py`
+
+The model generates candidates. You verify and commit them. Log every
+acceptance and rejection to `docs/test-generation-log.md` as you go - do not
+try to reconstruct it afterwards, it is assessed and it will not be accurate.
+
+Read the API key from an environment variable. A committed key is an automatic
+fail on the whole project, and it is graded against your full commit history,
+so a key removed in a later commit does not help you.
+
+## Pipeline verification
+
+Green build on main: <link>
+Caught regression: <link to the failed PR check>
+
+The failing build removed the publisher domain condition from the atomic rule.
+The positive test still matched, but the near-miss began matching too, so the
+rule no longer discriminated. The test step caught it and blocked the merge.

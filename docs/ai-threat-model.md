@@ -17,10 +17,10 @@ generator to emit? Be specific to this pipeline, not generic.
 
 | Failure | Does the pipeline detect it? | If not, what would? |
 |---|---|---|
-| Silent degradation in output quality | | |
-| Plausible but wrong test cases | | |
-| API unavailable | | |
-| Schema drift over time | | |
+| Silent degradation in output quality | No - weaker near-misses still pass the tests | Periodic human review of generated cases |
+| Schema drift over time | No - tests match old schema, rule still passes, but misses real events | Validating rules against live telemetry |
+| Plausible but wrong test cases | Yes - test_rules.py fails if the generated positive doesn't match the rule | n/a |
+| API unavailable | Yes - script errors, no cases returned | n/a |
 
 ## Over-reliance
 

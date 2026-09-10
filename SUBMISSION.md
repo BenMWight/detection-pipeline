@@ -19,3 +19,8 @@
 
 Disclosed assistance is not penalised. Undisclosed assistance that is evident
 in the work is treated as misconduct.
+
+# Phase 1 complete
+Time taken is probably 3hrs to setup for the environment.
+
+

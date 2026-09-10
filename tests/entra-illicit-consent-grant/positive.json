@@ -1,5 +1,6 @@
 {
   "OperationName": "Add application",
   "Result": "success",
-  "TargetResources": "[{\"id\":\"41720abe-4d29-421d-8c47-144b91903118\",\"displayName\":\"Test Consent App\",\"type\":\"Application\",\"modifiedProperties\":[{\"displayName\":\"PublisherDomain\",\"oldValue\":\"[]\",\"newValue\":\"[\\\"bwig32521gmail.onmicrosoft.com\\\"]\"}]}]"
+  "TargetResources": "[{\"id\":\"41720abe-4d29-421d-8c47-144b91903118\",\"displayName\":\"Test Consent App\",\"type\":\"Application\",\"modifiedProperties\":[{\"displayName\":\"PublisherDomain\",\"oldValue\":\"[]\",\"newValue\":\"[\\\"bwig32521gmail.onmicrosoft.com\\\"]\"}]}]",
+  "source": "handwritten"
 }

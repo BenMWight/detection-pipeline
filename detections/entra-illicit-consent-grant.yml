@@ -42,9 +42,8 @@ detection:
   condition: selection and filter_verified
 
 falsepositives:
-  - Admin setting up sentinel over the first few days.
-  - mail read by apps that in the expected list.
-  - Azure service onboarding grants many permissions at once from a Microsoft IP; an attacker's grant is more likely to be an external ip , so an analyst should check source IP before escalating
+  - Developer deploys app
+  - Anything containing the literal text .onmicrosoft.com anywhere in TargetResource
 
 level:  medium 
 

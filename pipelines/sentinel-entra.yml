@@ -1,0 +1,30 @@
+name: sentinel-entra
+priority: 10
+
+transformations:
+  - id: audit_logs_table
+    type: set_state
+    key: query_table
+    val: AuditLogs
+    rule_conditions:
+      - type: logsource
+        product: azure
+        service: auditlogs
+
+  - id: signin_logs_table
+    type: set_state
+    key: query_table
+    val: SigninLogs
+    rule_conditions:
+      - type: logsource
+        product: azure
+        service: signinlogs
+
+  - id: activity_logs_table
+    type: set_state
+    key: query_table
+    val: AzureActivity
+    rule_conditions:
+      - type: logsource
+        product: azure
+        service: activitylogs

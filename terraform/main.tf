@@ -30,3 +30,21 @@ resource "azurerm_log_analytics_workspace" "this" {
 resource "azurerm_sentinel_log_analytics_workspace_onboarding" "this" {
   workspace_id = azurerm_log_analytics_workspace.this.id
 }
+
+resource "azurerm_sentinel_alert_rule_scheduled" "illicit_consent" {
+  name                       = "unverified-app-registration"
+  log_analytics_workspace_id = azurerm_log_analytics_workspace.this.id
+  display_name               = "Application registered with unverified publisher domain"
+  severity                   = "Medium"
+  query                      = <<-QUERY
+    AuditLogs
+    | where OperationName =~ "Add application" and Result =~ "success"
+    | where TargetResources contains "PublisherDomain"
+    | where TargetResources contains ".onmicrosoft.com"
+  QUERY
+  query_frequency            = "PT1H"
+  query_period               = "PT1H"
+  tactics                    = ["CredentialAccess"]
+
+  depends_on = [azurerm_sentinel_log_analytics_workspace_onboarding.this]
+}

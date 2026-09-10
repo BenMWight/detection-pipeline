@@ -28,7 +28,8 @@ logsource:
 
 detection:
   selection:
-    FieldName: value
+    OperationNameValue: 'MICROSOFT.AUTHORIZATION/ROLEASSIGNMENTS/WRITE'
+    ActivityStatusValue: 'Success'
   condition: selection
 
 falsepositives:
@@ -46,7 +47,11 @@ level: low
 
 # Project-specific metadata. Read by the Terraform deploy in Phase 4.
 project:
-  shape:  anomaly    # REQUIRED - one rule of each
+  shape: anomaly
+  correlation: |
+    The time-of-day condition is applied at deploy time. Sigma matches field
+    values and cannot express "outside business hours". The deployed query
+    filters to hours outside 08:00-18:00 local time.
   tuning_deferred: |
     "Business hours" is undefined and cannot be defined generically. It depends
     on timezone, and a team split across Melbourne and Manila has no single
